@@ -12,7 +12,7 @@ Resources:
     Properties:
       FunctionName: BackgroundJobLambda
       Handler: app.lambda_handler
-      Runtime: python3.13
+      Runtime: python3.9
       CodeUri: src/
       Timeout: 30
       MemorySize: 128
