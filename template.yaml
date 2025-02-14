@@ -19,7 +19,7 @@ Resources:
       Policies:
         - AWSLambdaBasicExecutionRole
         - SQSPollerPolicy:
-            QueueName: !Select [5, !Split [":", !Ref QueueArn]]  # Extract Queue Name from ARN
+            QueueName: !Select [5, !Split [":", !Sub "arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:backgroundjobqueue"]]
       Events:
         SQSEvent:
           Type: SQS
