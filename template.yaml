@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  QueueArn:
+    Type: String
+    Description: ARN of the existing Background Job SQS Queue
+
+Resources:
+  BackgroundJobLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: BackgroundJobLambda
+      Handler: app.lambda_handler
+      Runtime: python3.13
+      CodeUri: src/
+      Timeout: 30
+      MemorySize: 128
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - SQSPollerPolicy:
+            QueueName: !Select [5, !Split [":", !Ref QueueArn]]  # Extract Queue Name from ARN
+      Events:
+        SQSEvent:
+          Type: SQS
+          Properties:
+            Queue: !Ref QueueArn
+            BatchSize: 5  # Number of messages processed at once
+
+Outputs:
+  BackgroundJobLambdaArn:
+    Description: "ARN of the Lambda Function"
+    Value: !GetAtt BackgroundJobLambda.Arn
