@@ -1,11 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 
-Parameters:
-  QueueArn:
-    Type: String
-    Description: ARN of the existing Background Job SQS Queue
-
 Resources:
   BackgroundJobLambda:
     Type: AWS::Serverless::Function
@@ -24,8 +19,8 @@ Resources:
         SQSEvent:
           Type: SQS
           Properties:
-            Queue: !Ref QueueArn
-            BatchSize: 5  # Number of messages processed at once
+            Queue: !Sub "arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:backgroundjobqueue"
+            BatchSize: 1  # Number of messages processed at once
 
 Outputs:
   BackgroundJobLambdaArn:
